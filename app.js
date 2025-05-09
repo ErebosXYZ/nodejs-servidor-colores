@@ -23,17 +23,31 @@ const colors = [
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const path = parsedUrl.pathname;
+    // const query = parsedUrl.query;
+
+    console.log('server path: ' + path);
+    // console.log('server query: ' + query);
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
-    if (path == "/") {
-        res.write('<h1> Bienvenidos a la base de datos de colores de NetMind! </h1>');
-        res.write('<p> Para obtener un color aleatorio, haz una petición GET al endpoint <strong>/color</strong> .</p>');
-        res.write('<p> Para obtener un color específico, usa el parámetro de consulta <b>?variant=[color]</b> (por ejemplo, <b>?variant=[Vermillion]</b>). </p>');
+    if (path == '/color') {
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        res.writeHead(200, 'Content-Type', 'text/html; charset=utf-8');
+    
+        res.write(`<p style="color:${randomColor.hex}">${randomColor.hex}</p>`);
+        res.end();
     }
+
+
+    res.write('<h1> Bienvenidos a la base de datos de colores de NetMind! </h1>');
+    res.write('<p> Para obtener un color aleatorio, haz una petición GET al endpoint <strong>/color</strong> .</p>');
+    res.write('<p> Para obtener un color específico, usa el parámetro de consulta <b>?variant=[color]</b> (por ejemplo, <b>?variant=[Vermillion]</b>). </p>');
+
 
 });
 
 server.listen(3400, () => {
     console.log("Listening to requests for 3400 port");
 })
+
+// node --watch app.js per executar en temps real
