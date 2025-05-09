@@ -1,3 +1,7 @@
+
+const http = require('http');
+const url = require('url');
+
 const colors = [
     { variant: "Vermillion", hex: "#2E191B" },
     { variant: "Forest", hex: "#0B6623" },
@@ -15,3 +19,21 @@ const colors = [
     { variant: "Maroon", hex: "#800000" },
     { variant: "Coral", hex: "#FF7F50" }
 ];
+
+const server = http.createServer((req, res) => {
+    const parsedUrl = url.parse(req.url, true);
+    const path = parsedUrl.pathname;
+
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+
+    if (path == "/") {
+        res.write('<h1> Bienvenidos a la base de datos de colores de NetMind! </h1>');
+        res.write('<p> Para obtener un color aleatorio, haz una petición GET al endpoint <strong>/color</strong> .</p>');
+        res.write('<p> Para obtener un color específico, usa el parámetro de consulta <b>?variant=[color]</b> (por ejemplo, <b>?variant=[Vermillion]</b>). </p>');
+    }
+
+});
+
+server.listen(3400, () => {
+    console.log("Listening to requests for 3400 port");
+})
