@@ -37,24 +37,27 @@ const server = http.createServer((req, res) => {
             selectedColor = colors.find(c => c.variant.toLowerCase() === query.variant.toLowerCase());
         }
 
-        if (!selectedColor){
+        if (!selectedColor) {
             selectedColor = colors[Math.floor(Math.random() * colors.length)];
         }
         // const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
         res.writeHead(200, 'Content-Type', 'text/html; charset=utf-8');
-    
+
         res.write(`<p style="color:${selectedColor.hex}">${selectedColor.hex}</p>`);
         res.end();
         return; /**Evitem que el codi de sota continuï executant-se */
-    } else if (path === '/get-colors'){
+    } else if (path === '/get-colors') {
         let colorList = [];
         colorList = colors.map(e => e.variant);
         console.log(colorList);
         res.write(`<h1>Colores disponibles</h1>`)
         res.write(`<ul>`);
-        colorList.forEach(variant => {
-            res.write(`<li>${variant}</li>`)
+        // colorList.forEach(variant => {
+        //     res.write(`<li>${variant}</li>`)
+        // });
+        colors.forEach(color => {
+            res.write(`<li><a href="/color?variant=${encodeURIComponent(color.variant)}">${color.variant}</a></li>`);
         });
         res.write(`</ul>`);
         res.end();
