@@ -1,6 +1,12 @@
 
 const http = require('http');
 const url = require('url');
+const fs = require('fs');
+
+let data = fs.readFileSync("files/animals.json");
+
+let animals = JSON.parse(data);
+console.log(animals);
 
 const colors = [
     { variant: "Vermillion", hex: "#2E191B" },
@@ -62,6 +68,26 @@ const server = http.createServer((req, res) => {
         res.write(`</ul>`);
         res.end();
         return;
+    } else if (path === '/get-animal'){
+        let selectedAnimal;
+
+        if (query.variant) {
+            selectedAnimal = animals.find(a => a.variant.toLowerCase() === query.variant.toLowerCase());
+        }
+        if (!selectedAnimal) {
+            selectedAnimal = animals[Math.floor(Math.random() * animals.length)];
+        }
+        // const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        console.log(animals.animalName);
+        console.log(animals.animalName, animals.urlImage);
+
+        res.writeHead(200, 'Content-Type', 'text/html; charset=utf-8');
+        res.write(`<h1> ${selectedAnimal.animalName}</h1>`);
+
+        res.write(`<img src="${selectedAnimal.urlImage}" alt="${selectedAnimal.animalName}"></img>`);
+        res.end();
+        return;
+
     }
 
 
