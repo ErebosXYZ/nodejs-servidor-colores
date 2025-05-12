@@ -23,19 +23,42 @@ const colors = [
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const path = parsedUrl.pathname;
-    // const query = parsedUrl.query;
+    const query = parsedUrl.query;
 
     console.log('server path: ' + path);
-    // console.log('server query: ' + query);
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
-    if (path == '/color') {
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    if (path === '/color') {
+
+        let selectedColor;
+
+        if (query.variant) {
+            selectedColor = colors.find(c => c.variant.toLowerCase() === query.variant.toLowerCase());
+        }
+
+        if (!selectedColor){
+            selectedColor = colors[Math.floor(Math.random() * colors.length)];
+        }
+        // const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
         res.writeHead(200, 'Content-Type', 'text/html; charset=utf-8');
     
-        res.write(`<p style="color:${randomColor.hex}">${randomColor.hex}</p>`);
+        res.write(`<p style="color:${selectedColor.hex}">${selectedColor.hex}</p>`);
         res.end();
+        return; /**Evitem que el codi de sota continuï executant-se */
+    } else if (path === '/get-colors'){
+        let colorList = [];
+        colorList = colors.map(e => e.variant);
+        console.log(colorList);
+        res.write(`<h1>Colores disponibles</h1>`)
+        res.write(`<ul>`);
+        colorList.forEach(variant => {
+            res.write(`<li>${variant}</li>`)
+        });
+        res.write(`</ul>`);
+        res.end();
+        return;
     }
 
 
